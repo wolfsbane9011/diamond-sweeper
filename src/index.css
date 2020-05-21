@@ -1,0 +1,90 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.matrix-cell {
+  padding: 1px !important;
+  position: relative;
+}
+
+.diamond-table {
+  width: 200px !important;
+  margin: 0 auto !important;
+}
+
+.diamond-value {
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.login-form-page, .sign-up-form-page {
+    height: 100vh;
+}
+
+.login-form-column, .sign-up-form-column {
+    max-width: 450px;
+}
+
+.field-error {
+  float: left;
+  margin: -15px 3px 3px;
+  font-size: 10px;
+  color: red;
+}
+
+.password-hint {
+  float: left;
+  margin: -10px 3px 10px;
+  font-size: 10px;
+  line-height: 1.3;
+  text-align: left;
+}
+
+.form-dropdown {
+  margin: 13px 0;
+}
+
+.form-dropdown-error {
+  margin-top: 21px !important;
+}
+
+.password-error {
+  margin-top: -5px !important;
+}
+
+.homepage-heading {
+  font-size: 4em !important;
+  font-weight: normal !important;
+  margin-bottom: 0 !important;
+  margin-top: 3em !important;
+}
+
+.ml-1 {
+  margin-left: 0.5em !important;
+}
+
+.homepage-segment {
+  min-height: 100vh;
+  padding: 1em 0;
+}
+
+.form-error {
+  background-color: #D50000 !important;
+  color: #fff;
+}
+
+@media screen and (max-width: 767px) {
+  .login-form-column, .sign-up-form-column {
+    max-width: 350px;
+  }
+}
