@@ -15,6 +15,17 @@ tempDB.users = {};
 tempDB.session = {};
 tempDB.gameProgress = {};
 
+function formattedResponse(error, message, data) {
+  const response = {};
+  response.error = error;
+  response.message = error;
+
+  if (!!data)
+    response.data = data;
+
+  return response;
+}
+
 app.get('/', function (req, res) {
   res.render("../public/index.html")
 });
@@ -24,27 +35,27 @@ app.get('/countries', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-  res.send(users.login(req, tempDB));
+  res.send(users.login(req, tempDB, formattedResponse));
 });
 
 app.post('/sign-up', function (req, res) {
-  res.send(users.addUser(req, tempDB));
+  res.send(users.addUser(req, tempDB, formattedResponse));
 });
 
 app.post('/logout', function (req, res) {
-  res.send(users.logout(req, tempDB));
+  res.send(users.logout(req, tempDB, formattedResponse));
 });
 
 app.get('/get-progress', function (req, res) {
-  res.send(users.getUserProgress(req, tempDB));
+  res.send(users.getUserProgress(req, tempDB, formattedResponse));
 });
 
 app.post('/update-progress', function (req, res) {
-  res.send(users.updateUserProgress(req, tempDB));
+  res.send(users.updateUserProgress(req, tempDB, formattedResponse));
 });
 
 app.get('/check-session', function (req, res) {
-  res.send(users.checkSession(req, tempDB));
+  res.send(users.checkSession(req, tempDB, formattedResponse));
 });
 
 function onHouseKeepingSessions() {

@@ -2,7 +2,7 @@ const utils = require('./utils');
 
 const users = {};
 
-users.addUser = function({body}, tempDB) {
+users.addUser = function({body}, tempDB, callback) {
     let errorInFields = false;
     const formFields = Object.keys(body);
 
@@ -27,17 +27,16 @@ users.addUser = function({body}, tempDB) {
             };
             const sessionId = utils.createSessionId();
             tempDB.session[sessionId] = {email: body.email.trim(), timestamp: new Date()};
-
-            return {error: false, message: utils.success, sessionId};
+            callback(false, utils.success, {sessionId});
         }
         else
-            return {error: true, message: utils.emailError};
+            callback(true, utils.emailError);
     }
     else
-        return {error: true, message: utils.invalidFormData};
+        callback(true, utils.invalidFormData);
 };
 
-users.login = function({body}, tempDB) {
+users.login = function({body}, tempDB, callback) {
     let errorInFields = false;
     const formFields = Object.keys(body);
 
@@ -48,29 +47,29 @@ users.login = function({body}, tempDB) {
 
     if (!errorInFields) {
         if (tempDB.users.hasOwnProperty(body.email.trim()) &&
-            tempDB.users[body.email.trim()].password === utils.createPasswordHash(body.password)) {
+            tempDB.users[body.email.trim()].password === utils.createPasswordHash(body.password)
+        ) {
             const sessionId = utils.createSessionId();
             tempDB.session[sessionId] = {email: body.email.trim(), timestamp: new Date()};
-
-            return {error: false, message: utils.success, sessionId, firstName: tempDB.users[body.email.trim()].firstName};
+            callback(false, utils.success, {sessionId, firstName: tempDB.users[body.email.trim()].firstName});
         }
         else
-            return {error: true, message: utils.loginError};
+            callback(true, utils.loginError);
     }
     else
-        return {error: true, message: utils.invalidFormData};
+        callback(true, utils.invalidFormData);
 };
 
-users.logout = function({body}, tempDB) {
+users.logout = function({body}, tempDB, callback) {
     if (body.hasOwnProperty('sessionId') && !!body.sessionId && tempDB.session.hasOwnProperty(body.sessionId)) {
         delete tempDB.session[body.sessionId];
-        return {error: false, message: utils.success};
+        callback(false, utils.success);
     }
     else
-        return {error: true, message: utils.invalidSession};
+        callback(true, utils.invalidSession);
 };
 
-users.getUserProgress = function({query}, tempDB) {
+users.getUserProgress = function({query}, tempDB, callback) {
     if (!!query.sessionId && tempDB.session.hasOwnProperty(query.sessionId) &&
         utils.validateSession(tempDB.session[query.sessionId].timestamp)
     ) {
@@ -81,14 +80,13 @@ users.getUserProgress = function({query}, tempDB) {
             target: utils.encryptTarget(tempDB.gameProgress[email].target),
             squaresUncovered: utils.encryptTarget(tempDB.gameProgress[email].squaresUncovered)
         };
-
-        return {error: false, progress};
+        callback(false, progress);
     }
     else
-        return {error: true, message: utils.invalidSession};
+        callback(true, utils.invalidSession);
 };
 
-users.updateUserProgress = function({body}, tempDB) {
+users.updateUserProgress = function({body}, tempDB, callback) {
     if (!!body.sessionId && tempDB.session.hasOwnProperty(body.sessionId) &&
         utils.validateSession(tempDB.session[body.sessionId].timestamp)
     ) {
@@ -97,22 +95,22 @@ users.updateUserProgress = function({body}, tempDB) {
         tempDB.gameProgress[email].currentProgress = utils.decryptTarget(body.progress.currentProgress);
         tempDB.gameProgress[email].squaresUncovered = utils.decryptTarget(body.progress.squaresUncovered);
 
-        return {error: false, message: utils.progressUpdate};
+        callback(false, utils.progressUpdate);
     }
     else
-        return {error: true, message: utils.invalidSession};
+        callback(true, utils.invalidSession);
 };
 
-users.checkSession = function({query}, tempDB) {
+users.checkSession = function({query}, tempDB, callback) {
     if (!!query.sessionId &&
         tempDB.session.hasOwnProperty(query.sessionId) &&
         utils.validateSession(tempDB.session[query.sessionId].timestamp)
     ) {
         tempDB.session[query.sessionId].timestamp = new Date();
-        return {error: false, message: utils.success};
+        callback(false, utils.success);
     }
     else
-        return {error: true, message: utils.invalidSession};
+        callback(true, utils.invalidSession);
 };
 
 module.exports = users;
