@@ -46,7 +46,7 @@ class SignUpPage extends Component {
                 .then(res => {
                     if (!res.data.error) {
                         window.sessionStorage.setItem('session', res.data.sessionId);
-                        this.history.pushState(null, '/main-page');
+                        this.props.history.push('/main', {firstName: requestBody.firstName});
                     }
                     else
                         this.setState({errorMessage: res.data.message});
@@ -75,7 +75,7 @@ class SignUpPage extends Component {
                 }))
                 .catch(err => {
                     console.log("err = ", err);
-                })
+                });
         }
     }
 

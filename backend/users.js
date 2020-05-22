@@ -23,7 +23,7 @@ users.addUser = function({body}, tempDB) {
                 status: 'Incomplete',
                 currentProgress: '',
                 target: utils.generateTargetNumbers,
-                squareCount: 0
+                squaresUncovered: ''
             };
             const sessionId = utils.createSessionId();
             tempDB.session[sessionId] = {email: body.email.trim(), timestamp: new Date()};
@@ -79,7 +79,7 @@ users.getUserProgress = function({query}, tempDB) {
             status: tempDB.gameProgress[email].status,
             currentProgress: utils.encryptTarget(tempDB.gameProgress[email].currentProgress),
             target: utils.encryptTarget(tempDB.gameProgress[email].target),
-            squareCount: tempDB.gameProgress[email].squareCount
+            squaresUncovered: utils.encryptTarget(tempDB.gameProgress[email].squaresUncovered)
         };
 
         return {error: false, progress};
@@ -95,7 +95,7 @@ users.updateUserProgress = function({body}, tempDB) {
         const email = tempDB.session[body.sessionId].email;
         tempDB.gameProgress[email].status = body.progress.status;
         tempDB.gameProgress[email].currentProgress = utils.decryptTarget(body.progress.currentProgress);
-        tempDB.gameProgress[email].squareCount = body.progress.squareCount;
+        tempDB.gameProgress[email].squaresUncovered = utils.decryptTarget(body.progress.squaresUncovered);
 
         return {error: false, message: utils.progressUpdate};
     }
@@ -107,8 +107,10 @@ users.checkSession = function({query}, tempDB) {
     if (!!query.sessionId &&
         tempDB.session.hasOwnProperty(query.sessionId) &&
         utils.validateSession(tempDB.session[query.sessionId].timestamp)
-    )
+    ) {
+        tempDB.session[query.sessionId].timestamp = new Date();
         return {error: false, message: utils.success};
+    }
     else
         return {error: true, message: utils.invalidSession};
 };

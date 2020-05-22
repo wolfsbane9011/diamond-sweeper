@@ -9,7 +9,7 @@ class LoginPage extends Component {
         this.fields = ['email', 'password'];
         this.state = {
             showPassword: false,
-            errorMessage: ''
+            errorMessage: (!!props.message ? props.message : '')
         };
         this.fields.forEach(val => {
             this.state[val] = {
@@ -43,7 +43,7 @@ class LoginPage extends Component {
                 .then(res => {
                     if (!res.data.error) {
                         window.sessionStorage.setItem('session', res.data.sessionId);
-                        this.history.pushState(null, '/main-page');
+                        this.props.history.push('/main', {firstName: res.data.firstName});
                     }
                     else
                         this.setState({errorMessage: res.data.message});
