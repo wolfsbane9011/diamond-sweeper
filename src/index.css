@@ -17,6 +17,10 @@ code {
   position: relative;
 }
 
+.matrix-cell i {
+  pointer-events: none;
+}
+
 .diamond-table {
   width: 200px !important;
   margin: 0 auto !important;
@@ -90,6 +94,29 @@ code {
 
 .white {
   color: #fff !important;
+}
+
+.successfully-saved {
+  color: #48ff3b !important;
+  text-align: center;
+  -webkit-transition: opacity 2s ease-in-out !important;
+  -moz-transition: opacity 2s ease-in-out !important;
+  -ms-transition: opacity 2s ease-in-out !important;
+  -o-transition: opacity 2s ease-in-out !important;
+  opacity: 1;
+}
+
+.hide-opacity {
+  opacity: 0;
+}
+
+.menu-bar {
+  background-color: #000 !important;
+}
+
+.diamond-question {
+  min-height: 35px;
+  min-width: 35px;
 }
 
 @media screen and (max-width: 767px) {

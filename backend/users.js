@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const config = require('./config');
 
 const users = {};
 
@@ -27,13 +28,13 @@ users.addUser = function({body}, tempDB, callback) {
             };
             const sessionId = utils.createSessionId();
             tempDB.session[sessionId] = {email: body.email.trim(), timestamp: new Date()};
-            callback(false, utils.success, {sessionId});
+            return callback(false, config.success, {sessionId});
         }
         else
-            callback(true, utils.emailError);
+            return callback(true, config.emailError);
     }
     else
-        callback(true, utils.invalidFormData);
+        return callback(true, config.invalidFormData);
 };
 
 users.login = function({body}, tempDB, callback) {
@@ -51,22 +52,22 @@ users.login = function({body}, tempDB, callback) {
         ) {
             const sessionId = utils.createSessionId();
             tempDB.session[sessionId] = {email: body.email.trim(), timestamp: new Date()};
-            callback(false, utils.success, {sessionId, firstName: tempDB.users[body.email.trim()].firstName});
+            return callback(false, config.success, {sessionId, firstName: tempDB.users[body.email.trim()].firstName});
         }
         else
-            callback(true, utils.loginError);
+            return callback(true, config.loginError);
     }
     else
-        callback(true, utils.invalidFormData);
+        return callback(true, config.invalidFormData);
 };
 
 users.logout = function({body}, tempDB, callback) {
     if (body.hasOwnProperty('sessionId') && !!body.sessionId && tempDB.session.hasOwnProperty(body.sessionId)) {
         delete tempDB.session[body.sessionId];
-        callback(false, utils.success);
+        return callback(false, config.success);
     }
     else
-        callback(true, utils.invalidSession);
+        return callback(true, config.invalidSession);
 };
 
 users.getUserProgress = function({query}, tempDB, callback) {
@@ -80,10 +81,10 @@ users.getUserProgress = function({query}, tempDB, callback) {
             target: utils.encryptTarget(tempDB.gameProgress[email].target),
             squaresUncovered: utils.encryptTarget(tempDB.gameProgress[email].squaresUncovered)
         };
-        callback(false, progress);
+        return callback(false, config.success, progress);
     }
     else
-        callback(true, utils.invalidSession);
+        return callback(true, config.invalidSession);
 };
 
 users.updateUserProgress = function({body}, tempDB, callback) {
@@ -95,10 +96,10 @@ users.updateUserProgress = function({body}, tempDB, callback) {
         tempDB.gameProgress[email].currentProgress = utils.decryptTarget(body.progress.currentProgress);
         tempDB.gameProgress[email].squaresUncovered = utils.decryptTarget(body.progress.squaresUncovered);
 
-        callback(false, utils.progressUpdate);
+        return callback(false, config.progressUpdate);
     }
     else
-        callback(true, utils.invalidSession);
+        return callback(true, config.invalidSession);
 };
 
 users.checkSession = function({query}, tempDB, callback) {
@@ -107,10 +108,10 @@ users.checkSession = function({query}, tempDB, callback) {
         utils.validateSession(tempDB.session[query.sessionId].timestamp)
     ) {
         tempDB.session[query.sessionId].timestamp = new Date();
-        callback(false, utils.success);
+        return callback(false, config.success);
     }
     else
-        callback(true, utils.invalidSession);
+        return callback(true, config.invalidSession);
 };
 
 module.exports = users;

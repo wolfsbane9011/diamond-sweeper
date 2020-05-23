@@ -1,9 +1,9 @@
 import React from 'react';
 import {Link} from "react-router-dom";
 import {Button, Container, Header, Icon, Menu, Segment} from 'semantic-ui-react';
-import util from "../utils";
+import config from "../config";
 
-function HomePage() {
+function HomePageComponent() {
     return (
         <Segment
             inverted
@@ -15,10 +15,10 @@ function HomePage() {
                 <Container>
                     <Menu.Item position='right'>
                         <Button inverted>
-                            <Link to='/login'>{util.login}</Link>
+                            <Link to='/login'>{config.login}</Link>
                         </Button>
                         <Button inverted primary className='ml-1'>
-                            <Link to='/sign-up'>{util.signUp}</Link>
+                            <Link to='/sign-up'>{config.signUp}</Link>
                         </Button>
                     </Menu.Item>
                 </Container>
@@ -26,7 +26,7 @@ function HomePage() {
             <Container text>
                 <Header
                     as='h1'
-                    content={util.homepageHeader}
+                    content={config.homepageHeader}
                     inverted
                     className='homepage-heading'
                 />
@@ -36,4 +36,4 @@ function HomePage() {
     )
 }
 
-export default HomePage;
+export default HomePageComponent;

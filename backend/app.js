@@ -18,7 +18,7 @@ tempDB.gameProgress = {};
 function formattedResponse(error, message, data) {
   const response = {};
   response.error = error;
-  response.message = error;
+  response.message = message;
 
   if (!!data)
     response.data = data;

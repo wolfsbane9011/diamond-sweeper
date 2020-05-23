@@ -1,0 +1,24 @@
+const config = {};
+config.gridLength = 8;
+config.requiredFieldErrorMsg = 'This field is required.';
+config.emailFieldErrorMsg = 'Please enter a valid email.';
+config.passwordFieldErrorMsg = 'Please enter a valid password.';
+config.passwordHint = 'Password must be at least 8 characters and should contain at least 1 lowercase, 1 uppercase, 1 number and any special character.';
+config.signUp = 'Sign Up';
+config.login = 'Log In';
+config.logout = 'Logout';
+config.loginQuestion = 'Already a member?';
+config.signUpQuestion = 'New to us?';
+config.signUpHeader = 'Sign up for a new account';
+config.loginHeader = 'Log-in to your account';
+config.homepageHeader = 'Diamond Sweeper';
+config.sessionLogout = 'Please log in again to continue.';
+config.updateProgress = 'Update Progress';
+config.placeholder = {};
+config.placeholder.email = 'E-mail address';
+config.placeholder.password = 'Password';
+config.placeholder.firstName = 'First Name';
+config.placeholder.lastName = 'Last Name';
+config.placeholder.country = 'Country';
+
+export default config;

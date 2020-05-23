@@ -3,7 +3,6 @@ const btoa = require('btoa');
 const atob = require('atob');
 
 const utils = {};
-
 utils.countries = [
     "Afghanistan",
     "Albania",
@@ -203,19 +202,13 @@ utils.countries = [
 ];
 utils.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 utils.passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
-utils.success = 'Success';
-utils.progressUpdate = 'Progress updated.';
-utils.invalidSession = 'Invalid session id.';
-utils.emailError = 'Email id already exists.';
-utils.invalidFormData = 'Invalid form data.';
-utils.loginError = 'Incorrect email id or password.';
 
 utils.validate = function (id, val) {
     if (id === 'firstName' || id === 'lastName' || id === 'country')
-        return !val.trim().length > 0;
+        return !(typeof val === 'string' && val.trim().length > 0);
     if (id === 'email')
         return !utils.emailFormat.test(val);
-    if (id === 'password')
+    if (id === 'password' && typeof val === 'string' && val.length > 7)
         return !utils.passwordFormat.test(val);
     return true;
 };
