@@ -115,8 +115,8 @@ code {
 }
 
 .diamond-question {
-  min-height: 35px;
-  min-width: 35px;
+  min-height: 2.5em;
+  min-width: 3em;
 }
 
 .header-row {

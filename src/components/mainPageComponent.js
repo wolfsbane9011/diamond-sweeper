@@ -23,13 +23,17 @@ class MainPageComponent extends Component {
 
     onClickButton(e) {
         const index = e.target.id.split('-')[1] + '-' + e.target.id.split('-')[2];
-        this.setState(state => {
-            const metadata = {};
-            metadata.diamonds = state.metadata.diamonds;
-            metadata.squaresUncovered = state.metadata.squaresUncovered.push(index);
-            metadata.currentProgress = (state.metadata.diamonds.indexOf(index) > -1 ?
-                state.metadata.currentProgress.push(index) : state.metadata.currentProgress);
-            return metadata;
+        const metadata = JSON.parse(JSON.stringify(this.state.metadata));
+        metadata.squaresUncovered[metadata.squaresUncovered.length] = index;
+
+        if (metadata.diamonds.indexOf(index) > -1)
+            metadata.currentProgress[metadata.currentProgress.length] = index;
+
+        this.setState({metadata,
+            ...{finalScore: (metadata.currentProgress.length === config.gridLength ?
+                    (Math.pow(config.gridLength, 2) - metadata.squaresUncovered.length): 0),
+                    showGameOverScreen: (metadata.currentProgress.length === config.gridLength),
+                    showGameScreen: (metadata.currentProgress.length !== config.gridLength)}
         });
     }
 
@@ -140,7 +144,7 @@ class MainPageComponent extends Component {
     showHideNewGameScreen = (e) =>
         this.setState(state => ({showNewGameScreen: !state.showNewGameScreen, showGameScreen: !state.showGameScreen}));
 
-    logout() {
+    logout = (e) => {
         util.makeHTTPRequest('/logout', 'delete',{sessionId: window.sessionStorage.getItem('session')})
             .then(res => {
                 window.sessionStorage.clear();
@@ -149,7 +153,7 @@ class MainPageComponent extends Component {
             .catch(err => {
                 console.log("err = ", err);
             });
-    }
+    };
 
     componentDidMount() {
         if (!!window.sessionStorage.getItem('session')) {

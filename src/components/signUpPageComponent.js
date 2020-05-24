@@ -48,7 +48,7 @@ class SignUpPageComponent extends Component {
         if (!errorInFields) {
             const requestBody = {};
             this.fields.forEach(value => {
-                requestBody[value] = this.state[value].value;
+                requestBody[value] = currentValues[value] || this.state[value].value;
             });
             util.makeHTTPRequest('/sign-up', 'post', requestBody)
                 .then(res => {

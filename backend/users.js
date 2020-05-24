@@ -88,10 +88,11 @@ users.updateUserProgress = function(body, tempDB, callback) {
 
 users.newGame = function(query, tempDB, callback) {
     const email = tempDB.session[query.sessionId].email;
+    const newTarget = utils.generateTargetNumbers();
     const response = tempDB.gameProgress[email] = {
         status: 'Incomplete',
         currentProgress: '',
-        target: utils.encryptTarget(utils.generateTargetNumbers()),
+        target: utils.encryptTarget(newTarget),
         squaresUncovered: ''
     };
     tempDB.session[query.sessionId].timestamp = new Date();

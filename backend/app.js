@@ -32,10 +32,10 @@ function checkSession(req, module) {
   const sessionId = obj.sessionId;
   if (!!sessionId && tempDB.session.hasOwnProperty(sessionId) && utils.validateSession(tempDB.session[sessionId].timestamp)) {
     tempDB.session[sessionId].timestamp = new Date();
-    module(obj, tempDB, formattedResponse);
+    return module(obj, tempDB, formattedResponse);
   }
   else
-    formattedResponse(true, config.invalidSession);
+    return formattedResponse(true, config.invalidSession);
 }
 
 app.get('/', function (req, res) {
