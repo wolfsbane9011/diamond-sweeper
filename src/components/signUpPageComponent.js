@@ -34,15 +34,15 @@ class SignUpPageComponent extends Component {
         const allElements = [...e.target.elements];
         const currentValues = {};
         allElements.forEach(element => {
-            if (element.type !== 'submit')
+            if (element.type !== 'submit' && [...element.classList].indexOf('search') === -1)
                 currentValues[element.id] = element.value;
         });
 
         let errorInFields = false;
         this.fields.forEach(value => {
-            if (this.validate(value, currentValues[value])) {
+            if (this.validate(value, currentValues[value] || this.state[value].value)) {
                 errorInFields = true;
-                this.setState({[value]: {value: currentValues[value], error: true}});
+                this.setState({[value]: {value: currentValues[value] || this.state[value].value, error: true}});
             }
         });
         if (!errorInFields) {
@@ -72,6 +72,7 @@ class SignUpPageComponent extends Component {
         this.setState(state => ({showPassword: !state.showPassword}));
 
     componentDidMount() {
+        window.sessionStorage.clear();
         if (this.state.countries.length === 0) {
             util.makeHTTPRequest('/countries', 'get')
                 .then(res => this.setState({

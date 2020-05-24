@@ -69,6 +69,10 @@ class LoginPageComponent extends Component {
     onPasswordStateChange = (e) =>
         this.setState(state => ({showPassword: !state.showPassword}));
 
+    componentDidMount() {
+        window.sessionStorage.clear();
+    }
+
     render() {
         return (
             <Grid textAlign='center' className='login-form-page' verticalAlign='middle'>

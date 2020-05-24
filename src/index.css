@@ -119,8 +119,47 @@ code {
   min-width: 35px;
 }
 
+.header-row {
+  padding-bottom: 0 !important;
+}
+
+.header-row h1 {
+  font-size: 45px !important;
+}
+
+.table-row {
+  padding-top: 0 !important;
+}
+
+.new-game {
+  height: 100vh;
+  opacity: 0.5;
+  background-color: #fff;
+}
+
+.new-game-description, .game-over-description {
+  text-align: center;
+  width: 100% !important;
+}
+
+.half-width {
+  width: 50% !important;
+}
+
+.fs-45 {
+  font-size: 45px !important;
+}
+
 @media screen and (max-width: 767px) {
   .login-form-column, .sign-up-form-column {
     max-width: 350px;
+  }
+
+  .header-row {
+    padding-top: 5em !important;
+  }
+
+  .header-row h1 {
+    font-size: 30px !important;
   }
 }

@@ -20,5 +20,13 @@ config.placeholder.password = 'Password';
 config.placeholder.firstName = 'First Name';
 config.placeholder.lastName = 'Last Name';
 config.placeholder.country = 'Country';
+config.mainPageHeading = 'Diamond Sweeper';
+config.welcome = 'Welcome';
+config.welcomeTitle = 'Welcome to Diamond Sweeper';
+config.welcomeSubTitle = 'Press the button to play the game';
+config.welcomePlayButton = 'Play';
+config.gameOverTitle = 'Congratulations';
+config.gameOverSubTitle = 'Your final score is';
+config.gameOverPlayAgain = 'Play Again';
 
 export default config;

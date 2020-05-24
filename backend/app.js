@@ -58,6 +58,10 @@ app.get('/check-session', function (req, res) {
   res.send(users.checkSession(req, tempDB, formattedResponse));
 });
 
+app.get('/new-game', function (req, res) {
+  res.send(users.newGame(req, tempDB, formattedResponse));
+});
+
 function onHouseKeepingSessions() {
   const allSessions = Object.keys(tempDB.session);
   allSessions.forEach(function (sessionId) {

@@ -23,7 +23,7 @@ users.addUser = function({body}, tempDB, callback) {
             tempDB.gameProgress[body.email.trim()] = {
                 status: 'Incomplete',
                 currentProgress: '',
-                target: utils.generateTargetNumbers,
+                target: utils.generateTargetNumbers(),
                 squaresUncovered: ''
             };
             const sessionId = utils.createSessionId();
@@ -96,7 +96,27 @@ users.updateUserProgress = function({body}, tempDB, callback) {
         tempDB.gameProgress[email].currentProgress = utils.decryptTarget(body.progress.currentProgress);
         tempDB.gameProgress[email].squaresUncovered = utils.decryptTarget(body.progress.squaresUncovered);
 
+        tempDB.session[body.sessionId].timestamp = new Date();
         return callback(false, config.progressUpdate);
+    }
+    else
+        return callback(true, config.invalidSession);
+};
+
+users.newGame = function({query}, tempDB, callback) {
+    if (!!query.sessionId &&
+        tempDB.session.hasOwnProperty(query.sessionId) &&
+        utils.validateSession(tempDB.session[query.sessionId].timestamp)
+    ) {
+        const email = tempDB.session[query.sessionId].email;
+        const response = tempDB.gameProgress[email] = {
+            status: 'Incomplete',
+            currentProgress: '',
+            target: utils.encryptTarget(utils.generateTargetNumbers()),
+            squaresUncovered: ''
+        };
+        tempDB.session[query.sessionId].timestamp = new Date();
+        return callback(false, config.success, response);
     }
     else
         return callback(true, config.invalidSession);
