@@ -7,7 +7,7 @@ const config = require('./config');
 
 const app = express();
 
-app.use(express.static('public'));
+app.use(express.static('../build/static'));
 app.use(bodyParser.json());
 app.use(cors());
 
@@ -39,7 +39,7 @@ function checkSession(req, module) {
 }
 
 app.get('/', function (req, res) {
-  res.render("../public/index.html")
+  res.render("../build/index.html")
 });
 
 app.get('/countries', function (req, res) {

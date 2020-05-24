@@ -21,22 +21,6 @@ class MainPageComponent extends Component {
         };
     }
 
-    onClickButton(e) {
-        const index = e.target.id.split('-')[1] + '-' + e.target.id.split('-')[2];
-        const metadata = JSON.parse(JSON.stringify(this.state.metadata));
-        metadata.squaresUncovered[metadata.squaresUncovered.length] = index;
-
-        if (metadata.diamonds.indexOf(index) > -1)
-            metadata.currentProgress[metadata.currentProgress.length] = index;
-
-        this.setState({metadata,
-            ...{finalScore: (metadata.currentProgress.length === config.gridLength ?
-                    (Math.pow(config.gridLength, 2) - metadata.squaresUncovered.length): 0),
-                    showGameOverScreen: (metadata.currentProgress.length === config.gridLength),
-                    showGameScreen: (metadata.currentProgress.length !== config.gridLength)}
-        });
-    }
-
     createTable() {
         const {Row, Cell} = Table;
         return (
@@ -80,14 +64,7 @@ class MainPageComponent extends Component {
                     const element = document.getElementById('update-message');
                     element.classList.remove('hide-opacity');
                     setTimeout(() => element.classList.add('hide-opacity'), 3000);
-
-                    if (progress.status === 'Complete')
-                        this.setState({
-                            finalScore: (Math.pow(config.gridLength, 2) - this.state.metadata.squaresUncovered.length),
-                            showGameOverScreen: true
-                        });
-                    else
-                        this.setState({updateMessage: res.data.message});
+                    this.setState({updateMessage: res.data.message});
                 }
                 else
                     this.props.history.push('/login', {message: config.sessionLogout});
@@ -95,6 +72,23 @@ class MainPageComponent extends Component {
             .catch(err => {
                 console.log("err = ", err);
             });
+    }
+
+    onClickButton(e) {
+        const index = e.target.id.split('-')[1] + '-' + e.target.id.split('-')[2];
+        const metadata = JSON.parse(JSON.stringify(this.state.metadata));
+        metadata.squaresUncovered[metadata.squaresUncovered.length] = index;
+
+        if (metadata.diamonds.indexOf(index) > -1)
+            metadata.currentProgress[metadata.currentProgress.length] = index;
+
+        this.setState({metadata,
+            ...{finalScore: (metadata.currentProgress.length === config.gridLength ?
+                    (Math.pow(config.gridLength, 2) - metadata.squaresUncovered.length): 0),
+                    showGameOverScreen: (metadata.currentProgress.length === config.gridLength),
+                    showGameScreen: (metadata.currentProgress.length !== config.gridLength)}
+        });
+        this.updateProgress();
     }
 
     generateMetadata(data) {
