@@ -95,7 +95,6 @@ users.newGame = function(query, tempDB, callback) {
         target: utils.encryptTarget(newTarget),
         squaresUncovered: ''
     };
-    tempDB.session[query.sessionId].timestamp = new Date();
     return callback(false, config.success, response);
 };
 

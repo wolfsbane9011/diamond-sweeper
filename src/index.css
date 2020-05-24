@@ -26,7 +26,7 @@ code {
   margin: 0 auto !important;
 }
 
-.diamond-value {
+.diamond-value, .arrow-value {
   text-align: center;
   font-size: 1.5em;
 }
@@ -119,6 +119,17 @@ code {
   min-width: 3em;
 }
 
+.arrow-value {
+  min-height: 1.45em;
+  min-width: 2em;
+  margin-top: 5px !important;
+}
+
+.empty-row-column {
+  min-height: 1.45em;
+  min-width: 2em;
+}
+
 .header-row {
   padding-bottom: 0 !important;
 }
@@ -137,7 +148,7 @@ code {
   background-color: #fff;
 }
 
-.new-game-description, .game-over-description {
+.new-game-description, .game-over-description, .alert-description {
   text-align: center;
   width: 100% !important;
 }

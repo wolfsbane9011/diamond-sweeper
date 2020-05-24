@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Button, Container, Grid, Icon, Item, Menu, Header, Table} from "semantic-ui-react";
-import Range from "lodash/range";
 import NewGameComponent from "./newGameComponent";
 import GameOverComponent from "./gameoverComponent";
 import util from "../utils";
@@ -14,6 +13,11 @@ class MainPageComponent extends Component {
             !!this.props.location.state.firstName ? this.props.location.state.firstName : ''),
             metadata: {},
             updateMessage: '',
+            direction: {
+                enabled: false,
+                icon: "",
+                index: ""
+            },
             showNewGameScreen: false,
             showGameOverScreen: false,
             showGameScreen: false,
@@ -25,23 +29,27 @@ class MainPageComponent extends Component {
         const {Row, Cell} = Table;
         return (
             <React.Fragment>
-                {Object.keys(this.state.metadata).length > 0 && Range(0, config.gridLength).map((current, index) => (
+                {Object.keys(this.state.metadata).length > 0 && [...Array(config.gridLength).keys()].map((current, index) => (
                     <Row key={current + "" + index}>
-                        {Range(0, config.gridLength).map((curr, i) => (
+                        {[...Array(config.gridLength).keys()].map((curr, i) => (
                             <Cell key={i + "" + curr} className="matrix-cell">
                                 {this.state.metadata.diamonds.indexOf(current + '-' + curr) > - 1 &&
                                 (this.state.metadata.squaresUncovered.indexOf(current + '-' + curr) > - 1) &&
                                 (<Item as="div" id={'diamond-' + current + '-' + curr} className="diamond-value"><Icon name="diamond"/></Item>)}
+                                {this.state.direction.enabled && ((current + '-' + curr) === this.state.direction.index) && (
+                                    (<Item as="div" id={'arrow-' + current + '-' + curr} className="arrow-value"><Icon name={this.state.direction.icon}/></Item>)
+                                )}
                                 <Item as="div"
                                       className={(this.state.metadata.squaresUncovered.indexOf(current + '-' + curr) > - 1) &&
-                                      (this.state.metadata.diamonds.indexOf(current + '-' + curr) === -1) ? "diamond-question" : ''}>
-                                {this.state.metadata.squaresUncovered.indexOf(current + '-' + curr) === - 1 && (
-                                    <Button icon={<Icon name='question' />}
-                                            id={'button-' + current + '-' + curr}
-                                            fluid
-                                            onClick={event => this.onClickButton(event)}
-                                    />
-                                )}
+                                      (this.state.metadata.diamonds.indexOf(current + '-' + curr) === -1) &&
+                                         !this.state.direction.enabled ? "diamond-question" : ''}>
+                                    {this.state.metadata.squaresUncovered.indexOf(current + '-' + curr) === -1 && (
+                                        <Button icon={<Icon name='question' />}
+                                                id={'button-' + current + '-' + curr}
+                                                fluid
+                                                onClick={event => this.onClickButton(event)}
+                                        />
+                                    )}
                                 </Item>
                             </Cell>
                         ))}
@@ -77,12 +85,66 @@ class MainPageComponent extends Component {
     onClickButton(e) {
         const index = e.target.id.split('-')[1] + '-' + e.target.id.split('-')[2];
         const metadata = JSON.parse(JSON.stringify(this.state.metadata));
+        const direction = JSON.parse(JSON.stringify(this.state.direction));
         metadata.squaresUncovered[metadata.squaresUncovered.length] = index;
 
-        if (metadata.diamonds.indexOf(index) > -1)
+        if (metadata.diamonds.indexOf(index) > -1) {
             metadata.currentProgress[metadata.currentProgress.length] = index;
+            direction.enabled = false;
+            direction.icon = "";
+            direction.index = "";
+        }
+        else if (metadata.currentProgress.length !== config.gridLength) {
+            direction.enabled = true;
+            direction.index = index;
+            const arrows = {
+                up: "arrow up",
+                down: "arrow down",
+                left: "arrow left",
+                right: "arrow right"
+            };
+            let actualNumbers = metadata.diamonds.map(index => util.generateActualNumbers(index));
+            const currentNumber = util.generateActualNumbers(index);
+            let closestNumber = util.getClosestNumber(actualNumbers, currentNumber);
+            let closestIndex = util.generateIndexNumbers([closestNumber])[0].split('-');
 
-        this.setState({metadata,
+            let flag = true;
+            while (flag) {
+               if (metadata.currentProgress.indexOf(closestIndex) > -1) {
+                   actualNumbers.splice(actualNumbers.indexOf(closestNumber), 1);
+                   closestNumber = util.getClosestNumber(actualNumbers, currentNumber);
+                   closestIndex = util.generateIndexNumbers([closestNumber])[0].split('-');
+               }
+               else {
+                   flag = false;
+                   const currentIndex = index.split('-');
+                   if (+currentIndex[0] > +closestIndex[0]) {
+                       if (+currentIndex[1] > +closestIndex[1])
+                           direction.icon = arrows.left;
+                       else if (+currentIndex[1] < +closestIndex[1])
+                           direction.icon = arrows.right;
+                       else
+                           direction.icon = arrows.top;
+                   }
+                   else if (+currentIndex[0] < +closestIndex[0]) {
+                       if (+currentIndex[1] > +closestIndex[1])
+                           direction.icon = arrows.left;
+                       else if (+currentIndex[1] < +closestIndex[1])
+                           direction.icon = arrows.right;
+                       else
+                           direction.icon = arrows.down;
+                   }
+                   else {
+                       if (+currentIndex[1] > +closestIndex[1])
+                           direction.icon = arrows.left;
+                       else
+                           direction.icon = arrows.right;
+                   }
+               }
+            }
+        }
+
+        this.setState({metadata, direction,
             ...{finalScore: (metadata.currentProgress.length === config.gridLength ?
                     (Math.pow(config.gridLength, 2) - metadata.squaresUncovered.length): 0),
                     showGameOverScreen: (metadata.currentProgress.length === config.gridLength),

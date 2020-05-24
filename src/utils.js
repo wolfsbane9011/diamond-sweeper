@@ -38,4 +38,10 @@ util.generateActualNumbers = function (target) {
     return ((+target.split('-')[0] * config.gridLength) + +target.split('-')[1] + 1);
 };
 
+util.getClosestNumber = function (target, currentNumber) {
+    return target.reduce((prev, curr) => {
+        return (Math.abs(curr - currentNumber) < Math.abs(prev - currentNumber) ? curr : prev);
+    });
+};
+
 export default util;
