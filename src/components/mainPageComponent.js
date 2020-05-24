@@ -69,7 +69,7 @@ class MainPageComponent extends Component {
             currentProgress: util.encryptTarget(this.state.metadata.currentProgress.map(index => util.generateActualNumbers(index)).join('|')),
             squaresUncovered: util.encryptTarget(this.state.metadata.squaresUncovered.map(index => util.generateActualNumbers(index)).join('|'))
         };
-        util.makeHTTPRequest('/update-progress', 'post',
+        util.makeHTTPRequest('/update-progress', 'put',
             {sessionId: window.sessionStorage.getItem('session'), progress})
             .then(res => {
                 if (!res.data.error) {
@@ -141,7 +141,7 @@ class MainPageComponent extends Component {
         this.setState(state => ({showNewGameScreen: !state.showNewGameScreen, showGameScreen: !state.showGameScreen}));
 
     logout() {
-        util.makeHTTPRequest('/logout', 'post',{sessionId: window.sessionStorage.getItem('session')})
+        util.makeHTTPRequest('/logout', 'delete',{sessionId: window.sessionStorage.getItem('session')})
             .then(res => {
                 window.sessionStorage.clear();
                 this.props.history.push('/login');

@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const utils = require('./utils');
 const users = require('./users');
+const config = require('./config');
 
 const app = express();
 
@@ -26,6 +27,17 @@ function formattedResponse(error, message, data) {
   return response;
 }
 
+function checkSession(req, module) {
+  const obj = (['post', 'put', 'delete'].indexOf(req.method.toLowerCase()) > -1 ? req.body : req.query);
+  const sessionId = obj.sessionId;
+  if (!!sessionId && tempDB.session.hasOwnProperty(sessionId) && utils.validateSession(tempDB.session[sessionId].timestamp)) {
+    tempDB.session[sessionId].timestamp = new Date();
+    module(obj, tempDB, formattedResponse);
+  }
+  else
+    formattedResponse(true, config.invalidSession);
+}
+
 app.get('/', function (req, res) {
   res.render("../public/index.html")
 });
@@ -42,24 +54,26 @@ app.post('/sign-up', function (req, res) {
   res.send(users.addUser(req, tempDB, formattedResponse));
 });
 
-app.post('/logout', function (req, res) {
-  res.send(users.logout(req, tempDB, formattedResponse));
+app.delete('/logout', function (req, res) {
+  res.send(checkSession(req, users.logout));
 });
 
 app.get('/get-progress', function (req, res) {
-  res.send(users.getUserProgress(req, tempDB, formattedResponse));
+  res.send(checkSession(req, users.getUserProgress));
 });
 
-app.post('/update-progress', function (req, res) {
-  res.send(users.updateUserProgress(req, tempDB, formattedResponse));
-});
-
-app.get('/check-session', function (req, res) {
-  res.send(users.checkSession(req, tempDB, formattedResponse));
+app.put('/update-progress', function (req, res) {
+  res.send(checkSession(req, users.updateUserProgress));
 });
 
 app.get('/new-game', function (req, res) {
-  res.send(users.newGame(req, tempDB, formattedResponse));
+  res.send(checkSession(req, users.newGame));
+});
+
+app.get('/check-session', function (req, res) {
+  res.send(checkSession(req, function (query, tempDB, callback) {
+    return callback(false, config.success);
+  }));
 });
 
 function onHouseKeepingSessions() {

@@ -61,77 +61,41 @@ users.login = function({body}, tempDB, callback) {
         return callback(true, config.invalidFormData);
 };
 
-users.logout = function({body}, tempDB, callback) {
-    if (body.hasOwnProperty('sessionId') && !!body.sessionId && tempDB.session.hasOwnProperty(body.sessionId)) {
-        delete tempDB.session[body.sessionId];
-        return callback(false, config.success);
-    }
-    else
-        return callback(true, config.invalidSession);
+users.logout = function(body, tempDB, callback) {
+    delete tempDB.session[body.sessionId];
+    return callback(false, config.success);
 };
 
-users.getUserProgress = function({query}, tempDB, callback) {
-    if (!!query.sessionId && tempDB.session.hasOwnProperty(query.sessionId) &&
-        utils.validateSession(tempDB.session[query.sessionId].timestamp)
-    ) {
-        const email = tempDB.session[query.sessionId].email;
-        const progress = {
-            status: tempDB.gameProgress[email].status,
-            currentProgress: utils.encryptTarget(tempDB.gameProgress[email].currentProgress),
-            target: utils.encryptTarget(tempDB.gameProgress[email].target),
-            squaresUncovered: utils.encryptTarget(tempDB.gameProgress[email].squaresUncovered)
-        };
-        return callback(false, config.success, progress);
-    }
-    else
-        return callback(true, config.invalidSession);
+users.getUserProgress = function(query, tempDB, callback) {
+    const email = tempDB.session[query.sessionId].email;
+    const progress = {
+        status: tempDB.gameProgress[email].status,
+        currentProgress: utils.encryptTarget(tempDB.gameProgress[email].currentProgress),
+        target: utils.encryptTarget(tempDB.gameProgress[email].target),
+        squaresUncovered: utils.encryptTarget(tempDB.gameProgress[email].squaresUncovered)
+    };
+    return callback(false, config.success, progress);
 };
 
-users.updateUserProgress = function({body}, tempDB, callback) {
-    if (!!body.sessionId && tempDB.session.hasOwnProperty(body.sessionId) &&
-        utils.validateSession(tempDB.session[body.sessionId].timestamp)
-    ) {
-        const email = tempDB.session[body.sessionId].email;
-        tempDB.gameProgress[email].status = body.progress.status;
-        tempDB.gameProgress[email].currentProgress = utils.decryptTarget(body.progress.currentProgress);
-        tempDB.gameProgress[email].squaresUncovered = utils.decryptTarget(body.progress.squaresUncovered);
+users.updateUserProgress = function(body, tempDB, callback) {
+    const email = tempDB.session[body.sessionId].email;
+    tempDB.gameProgress[email].status = body.progress.status;
+    tempDB.gameProgress[email].currentProgress = utils.decryptTarget(body.progress.currentProgress);
+    tempDB.gameProgress[email].squaresUncovered = utils.decryptTarget(body.progress.squaresUncovered);
 
-        tempDB.session[body.sessionId].timestamp = new Date();
-        return callback(false, config.progressUpdate);
-    }
-    else
-        return callback(true, config.invalidSession);
+    return callback(false, config.progressUpdate);
 };
 
-users.newGame = function({query}, tempDB, callback) {
-    if (!!query.sessionId &&
-        tempDB.session.hasOwnProperty(query.sessionId) &&
-        utils.validateSession(tempDB.session[query.sessionId].timestamp)
-    ) {
-        const email = tempDB.session[query.sessionId].email;
-        const response = tempDB.gameProgress[email] = {
-            status: 'Incomplete',
-            currentProgress: '',
-            target: utils.encryptTarget(utils.generateTargetNumbers()),
-            squaresUncovered: ''
-        };
-        tempDB.session[query.sessionId].timestamp = new Date();
-        return callback(false, config.success, response);
-    }
-    else
-        return callback(true, config.invalidSession);
-};
-
-users.checkSession = function({query}, tempDB, callback) {
-    if (!!query.sessionId &&
-        tempDB.session.hasOwnProperty(query.sessionId) &&
-        utils.validateSession(tempDB.session[query.sessionId].timestamp)
-    ) {
-        tempDB.session[query.sessionId].timestamp = new Date();
-        return callback(false, config.success);
-    }
-    else
-        return callback(true, config.invalidSession);
+users.newGame = function(query, tempDB, callback) {
+    const email = tempDB.session[query.sessionId].email;
+    const response = tempDB.gameProgress[email] = {
+        status: 'Incomplete',
+        currentProgress: '',
+        target: utils.encryptTarget(utils.generateTargetNumbers()),
+        squaresUncovered: ''
+    };
+    tempDB.session[query.sessionId].timestamp = new Date();
+    return callback(false, config.success, response);
 };
 
 module.exports = users;
