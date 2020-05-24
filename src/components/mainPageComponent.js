@@ -150,7 +150,9 @@ class MainPageComponent extends Component {
                     showGameOverScreen: (metadata.currentProgress.length === config.gridLength),
                     showGameScreen: (metadata.currentProgress.length !== config.gridLength)}
         });
-        this.updateProgress();
+
+        if (metadata.currentProgress.length === config.gridLength)
+            this.updateProgress();
     }
 
     generateMetadata(data) {
