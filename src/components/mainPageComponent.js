@@ -50,6 +50,11 @@ class MainPageComponent extends Component {
                                                 onClick={event => this.onClickButton(event)}
                                         />
                                     )}
+                                    {(this.state.metadata.squaresUncovered.indexOf(current + '-' + curr) !== -1) &&
+                                    ((current + '-' + curr) !== this.state.direction.index) &&
+                                    (this.state.metadata.diamonds.indexOf(current + '-' + curr) === -1) && (
+                                        <Item as='span' className='empty-row-column'>&nbsp;</Item>
+                                    )}
                                 </Item>
                             </Cell>
                         ))}
@@ -272,7 +277,7 @@ class MainPageComponent extends Component {
                         </Grid.Row>
                         <Grid.Row className='table-row'>
                             <Grid.Column className='main-column'>
-                                <Table celled className="diamond-table">
+                                <Table celled unstackable className="diamond-table">
                                     <Table.Body>
                                         {this.createTable()}
                                     </Table.Body>

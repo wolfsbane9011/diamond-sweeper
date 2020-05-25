@@ -126,8 +126,9 @@ code {
 }
 
 .empty-row-column {
-  min-height: 1.45em;
-  min-width: 2em;
+  display: inline-block !important;
+  width: 2.7em;
+  height: 2.7em;
 }
 
 .header-row {
