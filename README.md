@@ -21,3 +21,7 @@ A game where NxN blocks are displayed on the board and the target is to find N d
 ## Creating a front end build
 
 * Run 'npm run build' in the parent directory
+
+## System requirements:
+
+Node JS >= v12.14.1

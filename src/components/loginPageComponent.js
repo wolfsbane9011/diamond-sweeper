@@ -21,14 +21,15 @@ class LoginPageComponent extends Component {
         });
     }
 
-    validate(id, val) {
+    validate = (id, val) => {
         if (id === 'email')
             return !util.emailFormat.test(val);
-        if (id === 'password' && typeof val === 'string' && val.length > 7)
+        if (id === 'password' && typeof val === 'string' && val.length >= config.minPasswordLength)
             return !util.passwordFormat.test(val);
-    }
+        return true;
+    };
 
-    onSubmit(e) {
+    onSubmit = (e) => {
         const allElements = [...e.target.elements];
         const currentValues = {};
         allElements.forEach(element => {
@@ -61,7 +62,7 @@ class LoginPageComponent extends Component {
                     console.log("err = ", err);
                 });
         }
-    }
+    };
 
     onChangeField = (e) =>
         this.setState({[e.target.id]: {value: e.target.value, error: this.validate(e.target.id, e.target.value)}});

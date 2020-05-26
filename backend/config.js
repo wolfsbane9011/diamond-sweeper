@@ -1,4 +1,6 @@
 const config = {};
+config.gridLength = 8;
+config.minPasswordLength = 8;
 config.success = 'Success';
 config.progressUpdate = 'Progress updated.';
 config.invalidSession = 'Invalid session id.';

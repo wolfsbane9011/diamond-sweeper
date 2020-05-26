@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const btoa = require('btoa');
 const atob = require('atob');
+const config = require('./config');
 
 const utils = {};
 utils.countries = [
@@ -203,14 +204,25 @@ utils.countries = [
 utils.emailFormat = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 utils.passwordFormat = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
 
-utils.validate = function (id, val) {
+utils.validate = function(id, val) {
     if (id === 'firstName' || id === 'lastName' || id === 'country')
         return !(typeof val === 'string' && val.trim().length > 0);
     if (id === 'email')
         return !utils.emailFormat.test(val);
-    if (id === 'password' && typeof val === 'string' && val.length > 7)
+    if (id === 'password' && typeof val === 'string' && val.length >= config.minPasswordLength)
         return !utils.passwordFormat.test(val);
     return true;
+};
+
+utils.formValidate = function(body) {
+    const formFields = Object.keys(body);
+
+    let flag = false;
+    formFields.forEach(function (value) {
+        if (utils.validate(value, body[value]))
+            flag = true;
+    });
+    return flag;
 };
 
 utils.createPasswordHash = function(str) {
@@ -227,9 +239,9 @@ utils.validateSession = function(timestamp) {
 
 utils.generateTargetNumbers = function() {
     let arr = [];
-    while (arr.length < 8) {
+    while (arr.length < config.gridLength) {
         const num = Math.floor(Math.random() * 100) + 1;
-        if (arr.indexOf(num) === -1 && num < 65)
+        if (arr.indexOf(num) === -1 && num <= Math.pow(config.gridLength, 2))
             arr.push(num);
     }
     return arr.join('|');

@@ -21,16 +21,17 @@ class SignUpPageComponent extends Component {
         });
     }
 
-    validate(id, val) {
+    validate = (id, val) => {
         if (id === 'firstName' || id === 'lastName' || id === 'country')
             return !val.trim().length > 0;
         if (id === 'email')
             return !util.emailFormat.test(val);
-        if (id === 'password')
-            return !(util.passwordFormat.test(val) && val.length > 7);
-    }
+        if (id === 'password' && val.length >= config.minPasswordLength)
+            return !util.passwordFormat.test(val);
+        return true;
+    };
 
-    onSubmit(e) {
+    onSubmit = (e) => {
         const allElements = [...e.target.elements];
         const currentValues = {};
         allElements.forEach(element => {
@@ -63,7 +64,7 @@ class SignUpPageComponent extends Component {
                     console.log("err = ", err);
                 });
         }
-    }
+    };
 
     onChangeField = (e) =>
         this.setState({[e.target.id]: {value: e.target.value, error: this.validate(e.target.id, e.target.value)}});

@@ -4,13 +4,7 @@ const config = require('./config');
 const users = {};
 
 users.addUser = function({body}, tempDB, callback) {
-    let errorInFields = false;
-    const formFields = Object.keys(body);
-
-    formFields.forEach(function (value) {
-        if (utils.validate(value, body[value]))
-            errorInFields = true;
-    });
+    const errorInFields = utils.formValidate(body);
 
     if (!errorInFields) {
         if (!tempDB.users.hasOwnProperty(body.email.trim())) {
@@ -38,13 +32,7 @@ users.addUser = function({body}, tempDB, callback) {
 };
 
 users.login = function({body}, tempDB, callback) {
-    let errorInFields = false;
-    const formFields = Object.keys(body);
-
-    formFields.forEach(function (value) {
-        if (utils.validate(value, body[value]))
-            errorInFields = true;
-    });
+    const errorInFields = utils.formValidate(body);
 
     if (!errorInFields) {
         if (tempDB.users.hasOwnProperty(body.email.trim()) &&

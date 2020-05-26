@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Button, Container, Grid, Icon, Item, Menu, Header, Table} from "semantic-ui-react";
 import NewGameComponent from "./newGameComponent";
-import GameOverComponent from "./gameoverComponent";
+import GameOverComponent from "./gameOverComponent";
 import util from "../utils";
 import config from "../config";
 
@@ -25,7 +25,7 @@ class MainPageComponent extends Component {
         };
     }
 
-    createTable() {
+    createTable = () => {
         const {Row, Cell} = Table;
         return (
             <React.Fragment>
@@ -62,9 +62,9 @@ class MainPageComponent extends Component {
                 ))}
             </React.Fragment>
         );
-    }
+    };
 
-    updateProgress() {
+    updateProgress = () => {
         const progress = {
             status: (this.state.metadata.currentProgress.length === config.gridLength ? 'Complete' : this.state.metadata.status),
             currentProgress: util.encryptTarget(this.state.metadata.currentProgress.map(index => util.generateActualNumbers(index)).join('|')),
@@ -85,9 +85,9 @@ class MainPageComponent extends Component {
             .catch(err => {
                 console.log("err = ", err);
             });
-    }
+    };
 
-    onClickButton(e) {
+    onClickButton = (e) => {
         const index = e.target.id.split('-')[1] + '-' + e.target.id.split('-')[2];
         const metadata = JSON.parse(JSON.stringify(this.state.metadata));
         const direction = JSON.parse(JSON.stringify(this.state.direction));
@@ -158,9 +158,9 @@ class MainPageComponent extends Component {
 
         if (metadata.currentProgress.length === config.gridLength)
             this.updateProgress();
-    }
+    };
 
-    generateMetadata(data) {
+    generateMetadata = (data) => {
         const metadata = {};
         metadata.status = data.status;
         metadata.diamonds = util.generateIndexNumbers(util.decryptTarget(data.target).split('|'));
@@ -168,9 +168,9 @@ class MainPageComponent extends Component {
         metadata.currentProgress = util.generateIndexNumbers(!!data.currentProgress ? util.decryptTarget(data.currentProgress).split('|') : []);
 
         return metadata;
-    }
+    };
 
-    getProgress() {
+    getProgress = () => {
         util.makeHTTPRequest('/get-progress?sessionId=' + encodeURIComponent(window.sessionStorage.getItem('session')), 'get')
             .then(res => {
                 if (!res.data.error) {
@@ -187,7 +187,7 @@ class MainPageComponent extends Component {
             .catch(err => {
                 console.log("err = ", err);
             });
-    }
+    };
 
     onStartNewGame = (e) => {
         util.makeHTTPRequest('/new-game?sessionId=' + encodeURIComponent(window.sessionStorage.getItem('session')), 'get')
