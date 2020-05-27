@@ -1,9 +1,10 @@
 const config = {};
 config.gridLength = 8;
+config.minPasswordLength = 8;
 config.requiredFieldErrorMsg = 'This field is required.';
 config.emailFieldErrorMsg = 'Please enter a valid email.';
 config.passwordFieldErrorMsg = 'Please enter a valid password.';
-config.passwordHint = 'Password must be at least 8 characters and should contain at least 1 lowercase, 1 uppercase, 1 number and any special character.';
+config.passwordHint = `Password must be at least ${config.minPasswordLength} characters and should contain at least 1 lowercase, 1 uppercase, 1 number and any special character.`;
 config.signUp = 'Sign Up';
 config.login = 'Log In';
 config.logout = 'Logout';
