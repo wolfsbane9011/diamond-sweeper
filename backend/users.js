@@ -15,7 +15,7 @@ users.addUser = function({body}, tempDB, callback) {
                 password: utils.createPasswordHash(body.password)
             };
             tempDB.gameProgress[body.email.trim()] = {
-                status: 'Incomplete',
+                status: config.defaultStatus,
                 currentProgress: '',
                 target: utils.generateTargetNumbers(),
                 squaresUncovered: ''
@@ -78,7 +78,7 @@ users.newGame = function(query, tempDB, callback) {
     const email = tempDB.session[query.sessionId].email;
     const newTarget = utils.generateTargetNumbers();
     const response = tempDB.gameProgress[email] = {
-        status: 'Incomplete',
+        status: config.defaultStatus,
         currentProgress: '',
         target: utils.encryptTarget(newTarget),
         squaresUncovered: ''

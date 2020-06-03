@@ -79,13 +79,13 @@ app.get('/check-session', function (req, res) {
 function onHouseKeepingSessions() {
   const allSessions = Object.keys(tempDB.session);
   allSessions.forEach(function (sessionId) {
-    if (((new Date() - tempDB.session[sessionId].timestamp) / 60000) > 29)
+    if (!utils.validateSession(tempDB.session[sessionId].timestamp))
       delete tempDB.session[sessionId];
   });
 }
 
-setInterval(onHouseKeepingSessions, 60000);
+setInterval(onHouseKeepingSessions, config.sessionHouseKeepingInterval);
 
-app.listen(4200, function () {
-  console.log('Listening on port 4200!')
+app.listen(config.port, function () {
+  console.log(`Listening on port ${config.port}!`);
 });

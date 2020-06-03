@@ -234,7 +234,7 @@ utils.createSessionId = function() {
 };
 
 utils.validateSession = function(timestamp) {
-    return (((new Date() - timestamp) / 60000) < 30);
+    return (((new Date() - timestamp) / 60000) < config.sessionTimeout);
 };
 
 utils.generateTargetNumbers = function() {

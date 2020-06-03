@@ -29,5 +29,6 @@ config.welcomePlayButton = 'Play';
 config.gameOverTitle = 'Congratulations';
 config.gameOverSubTitle = 'Your final score is';
 config.gameOverPlayAgain = 'Play Again';
+config.completeStatus = 'Complete';
 
 export default config;

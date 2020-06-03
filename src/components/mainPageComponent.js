@@ -66,7 +66,7 @@ class MainPageComponent extends Component {
 
     updateProgress = () => {
         const progress = {
-            status: (this.state.metadata.currentProgress.length === config.gridLength ? 'Complete' : this.state.metadata.status),
+            status: (this.state.metadata.currentProgress.length === config.gridLength ? config.completeStatus : this.state.metadata.status),
             currentProgress: util.encryptTarget(this.state.metadata.currentProgress.map(index => util.generateActualNumbers(index)).join('|')),
             squaresUncovered: util.encryptTarget(this.state.metadata.squaresUncovered.map(index => util.generateActualNumbers(index)).join('|'))
         };
@@ -176,11 +176,11 @@ class MainPageComponent extends Component {
                 if (!res.data.error) {
                     const metadata = this.generateMetadata(res.data.data);
 
-                    this.setState({metadata: metadata,
+                    this.setState({metadata,
                         ...{showNewGameScreen: (metadata.squaresUncovered.length === 0),
                         showGameScreen: (metadata.squaresUncovered.length > 0),
-                        showGameOverScreen: (metadata.status === 'Complete' && metadata.currentProgress.length === config.gridLength),
-                        finalScore: (metadata.status === 'Complete' && metadata.currentProgress.length === config.gridLength ?
+                        showGameOverScreen: (metadata.status === config.completeStatus && metadata.currentProgress.length === config.gridLength),
+                        finalScore: (metadata.status === config.completeStatus && metadata.currentProgress.length === config.gridLength ?
                             Math.pow(config.gridLength, 2) - metadata.squaresUncovered.length : 0)}});
                 }
             })
@@ -194,7 +194,7 @@ class MainPageComponent extends Component {
             .then(res => {
                 if (!res.data.error) {
                     const metadata = this.generateMetadata(res.data.data);
-                    this.setState({metadata: metadata, showGameOverScreen: false, showGameScreen: true});
+                    this.setState({metadata, showGameOverScreen: false, showGameScreen: true});
                 }
                 else
                     console.log("message = ", res.data.message);
