@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Button, Container, Grid, Icon, Item, Menu, Header, Table} from "semantic-ui-react";
 import NewGameComponent from "./newGameComponent";
 import GameOverComponent from "./gameOverComponent";
+import ErrorComponent from "./errorComponent";
 import util from "../utils";
 import config from "../config";
 
@@ -20,6 +21,7 @@ class MainPageComponent extends Component {
             },
             showNewGameScreen: false,
             showGameOverScreen: false,
+            showErrorScreen: false,
             showGameScreen: false,
             finalScore: 0
         };
@@ -243,6 +245,9 @@ class MainPageComponent extends Component {
                 )}
                 {this.state.showGameOverScreen && (
                     <GameOverComponent onStartNewGame={this.onStartNewGame} score={this.state.finalScore} logout={this.logout}/>
+                )}
+                {this.state.showErrorScreen && (
+                    <ErrorComponent/>
                 )}
                 {this.state.showGameScreen && (
                     <Grid textAlign='center' className='main-page' verticalAlign='middle'>
